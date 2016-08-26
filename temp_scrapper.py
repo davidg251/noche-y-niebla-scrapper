@@ -25,7 +25,8 @@ class Scrapper:
 		req = requests.get(self.url, verify=False, params=data)
 
 		if(req.status_code == 200):
-	
+			
+			print "haciendo peticion.. ",req.url
 			return req.text
 
 		else:
