@@ -71,9 +71,9 @@ class CaseParser:
 			#print "victim ",victim = victims_field[last_index:m.start(0)]
 			victim = victims_field[last_index:m.start(0)]
 			all_victims.append({"victim": victim})
-			last_index = m.start(0)			
+			last_index = m.start(0) + 1			
 
 		all_victims.append( {"victim": victims_field[last_index:]} )	
-		#print all_victims
+		print all_victims
 		return all_victims
 		
