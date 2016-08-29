@@ -3,6 +3,7 @@ from lxml import html
 from lxml.html.clean import clean_html
 import json
 from pprint import pprint
+import re
 
 class CaseParser:
 
@@ -37,7 +38,7 @@ class CaseParser:
 
 		for tr_element in tr_elements:
 			self.all_cases.append(self.extract_instance(tr_element))
-			print "##############################"
+			print "###################################"
 
 
 
@@ -57,56 +58,22 @@ class CaseParser:
 
 
 	def extract_victims(self, victims_field):
-		#esto cambia por regexp
-		self.load_acts()
-		victims = victims_field.split("|")
-		victims = victims[0].split(",")
-		print victims
-		victims_object = []
-		victim = None
-		actsxvcitim = []
-		i = 1
+		
+		all_victims = []
+		pattern = r'(,[\s]{1,2}\b[^\d\W]+\b)|(,\sN\sN)'
+		
+		victims_field = victims_field.split("|")[0]
+		#pprint(victims_field)
+		#print "indexes"
+		last_index = 0
+		for m in re.finditer(pattern, victims_field):
+			#print m.start(0), m.end(0)
+			#print "victim ",victim = victims_field[last_index:m.start(0)]
+			victim = victims_field[last_index:m.start(0)]
+			all_victims.append({"victim": victim})
+			last_index = m.start(0)			
 
-
-		if ( len(victims) is 1) :
-			#cuando es solo una victima
-			vict = victims[0].split(" ") 
-			act = vict.pop()
-			vict = ''.join(el+'' for el in vict)
-
-			victims_object.append({"victima":vict, "actos":act})
-			return victims_object
-
-		for elem in victims:
-			
-			elem = elem.strip()
-
-
-
-			elif( not(elem in self.acts) ) :#si es victima
-
-				vict = elem.split(" ") 
-				act = vict.pop()
-				vict = ''.join(el+" " for el in vict)
-
-				if(victim is None):
-					victim = vict
-					actsxvcitim.append(act)
-				
-				else:
-					victims_object.append( {"victima":vict,"actos":actsxvcitim} )
-					victim = vict
-					actsxvcitim = []		
-
-
-			else :#si es acto
-
-				actsxvcitim.append(elem)
-
-			i+=1
-
-		#print "############################"
-		#pprint(victims)		
-		pprint(victims_object)
-		#print "############################"		
-		return victims
+		all_victims.append( {"victim": victims_field[last_index:]} )	
+		#print all_victims
+		return all_victims
+		
