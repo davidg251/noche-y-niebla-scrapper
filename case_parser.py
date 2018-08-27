@@ -8,11 +8,11 @@ import re
 class CaseParser:
   @property 
   def all_cases(self):
-    return self.all_cases
+    return self.cases
 
   def __init__(self, plain_html):
     #self.html_parsed = None
-    self.all_cases = []
+    self.cases = []
     self.html_parsed = html.fromstring(plain_html)
     self.acts = []
 
@@ -25,8 +25,7 @@ class CaseParser:
     #remove table header
     tr_elements.pop(0)
     for tr_element in tr_elements:
-      self.all_cases.append(self.extract_instance(tr_element))
-      print ("###################################")
+      self.cases.append(self.extract_instance(tr_element))
 
   def extract_instance(self, tr_element):
     td_elements = CSSSelector("td")(tr_element)
@@ -42,8 +41,6 @@ class CaseParser:
     all_victims = []
     pattern = r'(,[\s]{1,2}\b[^\d\W]+\b)|(,\sN\sN)'
     victims_field = victims_field.split("|")[0]
-    #pprint(victims_field)
-    #print "indexes"
     last_index = 0
     for m in re.finditer(pattern, victims_field):
       #print m.start(0), m.end(0)
@@ -52,5 +49,4 @@ class CaseParser:
       all_victims.append({"victim": victim})
       last_index = m.start(0) + 1			
     all_victims.append( {"victim": victims_field[last_index:]} )	
-    #print all_victims
     return all_victims
