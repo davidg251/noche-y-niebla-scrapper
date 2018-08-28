@@ -13,8 +13,8 @@ class CaseParser:
   def __init__(self, plain_html):
     #self.html_parsed = None
     self.cases = []
-    self.html_parsed = html.fromstring(plain_html)
     self.acts = []
+    self.html_parsed = html.fromstring(plain_html)
 
   def load_acts(self):
     with open('acts.json') as file:
@@ -39,14 +39,27 @@ class CaseParser:
 
   def extract_victims(self, victims_field):
     all_victims = []
-    pattern = r'(,[\s]{1,2}\b[^\d\W]+\b)|(,\sN\sN)'
+    patternVictims = r'(,[\s]{1,2}\b[^\d\W]+\b)|(,\sN\sN)'
     victims_field = victims_field.split("|")[0]
     last_index = 0
-    for m in re.finditer(pattern, victims_field):
-      #print m.start(0), m.end(0)
-      #print "victim ",victim = victims_field[last_index:m.start(0)]
+    for m in re.finditer(patternVictims, victims_field):
       victim = victims_field[last_index:m.start(0)]
-      all_victims.append({"victim": victim})
-      last_index = m.start(0) + 1			
+      all_victims.append(
+        {
+          "nombre": victim,
+          "casos" : self.extract_cases_victim(victim)
+        }
+      )
+      last_index = m.start(0) + 1
     all_victims.append( {"victim": victims_field[last_index:]} )	
     return all_victims
+  
+  def extract_cases_victim(self, victim):
+    cases_in_victim = []
+    patternActsVictim = r'(\s[A-Z]{1,2}\d{1,4}|,\s[A-Z]{1,2}\d{1,4})'
+    for m in re.finditer(patternActsVictim, victim):
+      firstIndex = victim.find(',')
+      if firstIndex < 0: firstIndex = 0
+      cases_in_victim.append( victim[m.start(0): m.end(0)].replace(",", "") )
+      #print( victim[m.start(0): m.end(0)].replace(",", ""))
+    return cases_in_victim

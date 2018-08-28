@@ -1,7 +1,7 @@
 from scrapper import Scrapper
 from case_parser import CaseParser
 from acts_parser import ActsParser
-
+import re
 
 # there are two ways for query the data, with the params raw in the url or
 # with params in the request's body. 
@@ -26,3 +26,5 @@ def extract_cases():
 
 extract_cases()
 #extract_acts()
+
+#extract_cases_victim('COMUNIDAD YURUMANGUI A18, D80, A102, D706, D903')
