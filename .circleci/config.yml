@@ -1,31 +1,19 @@
 version: 2.1
+
+orbs:
+  sonarcloud: sonarsource/sonarcloud@1.0.1
+
 jobs:
   sonar:
     docker:
-      - image: circleci/buildpack-deps:curl
+      - image: 'node:latest'
     steps:
       - checkout
-      - run:
-          name: Run sonarcloud scanner.
-          command: |
-            echo $SONAR_SCANNER_VERSION
-            echo $SONARCLOUD_LOGIN
-            echo test-${SONAR_SCANNER_VERSION}
-            curl -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
-            unzip $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
-            rm $HOME/.sonar/sonar-scanner.zip
-            export PATH=$SONAR_SCANNER_HOME/bin:$PATH
-            export SONAR_SCANNER_OPTS="-server"
-            sonar-scanner \
-              -Dsonar.projectKey=noche-y-niebla-scrapper \
-              -Dsonar.organization=open-source-nan140114 \
-              -Dsonar.sources=./src \
-              -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.login=$SONARCLOUD_LOGIN
+      - sonarcloud/scan
 
 workflows:
   version: 2
   code-quality:
     jobs:
       - sonar:
-          context: global-developer
+          context: sonarcloud
