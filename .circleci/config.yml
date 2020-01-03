@@ -25,4 +25,4 @@ workflows:
   code-quality:
     jobs:
       - sonar:
-        context: global-developer
+          context: global-developer
