@@ -8,6 +8,9 @@ jobs:
       - run:
           name: Run sonarcloud scanner.
           command: |
+            echo $SONAR_SCANNER_VERSION
+            echo $SONARCLOUD_LOGIN
+            echo test-${$SONAR_SCANNER_VERSION}
             curl -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
             unzip $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
             rm $HOME/.sonar/sonar-scanner.zip
