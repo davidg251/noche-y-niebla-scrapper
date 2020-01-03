@@ -14,10 +14,10 @@ jobs:
 workflows:
   version: 2
   code-quality:
-    filters:
-      branches:
-        ignore:
-          - master
     jobs:
       - sonar:
+          filters:
+            branches:
+              ignore:
+                - master
           context: sonarcloud
