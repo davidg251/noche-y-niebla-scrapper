@@ -5,6 +5,8 @@ import json
 from pprint import pprint
 import re
 
+from config import constants
+
 class CaseParser:
   @property 
   def all_cases(self):
@@ -35,14 +37,19 @@ class CaseParser:
     victimas = self.extract_victims( td_elements[3].text_content() )
     presunto_responsable = td_elements[4].text_content()
     tipificacion = td_elements[5].text_content()
-    return {"descripcion":descripcion , "fecha":fecha, "ubicacion":ubicacion, "victimas":victimas, "presunto_responsable":presunto_responsable, "tipificacion":tipificacion}
+    return { "descripcion":descripcion ,
+             "fecha":fecha, 
+             "ubicacion":ubicacion,
+             "victimas":victimas,
+             "presunto_responsable":presunto_responsable,
+             "tipificacion":tipificacion
+           }
 
   def extract_victims(self, victims_field):
     all_victims = []
-    patternVictims = r'(,[\s]{1,2}\b[^\d\W]+\b)|(,\sN\sN)'
     victims_field = victims_field.split("|")[0]
     last_index = 0
-    for m in re.finditer(patternVictims, victims_field):
+    for m in re.finditer(constants.patternVictims, victims_field):
       victim = victims_field[last_index:m.start(0)]
       all_victims.append(
         {
@@ -56,8 +63,7 @@ class CaseParser:
   
   def extract_cases_victim(self, victim):
     cases_in_victim = []
-    patternActsVictim = r'(\s[A-Z]{1,2}\d{1,4}|,\s[A-Z]{1,2}\d{1,4})'
-    for m in re.finditer(patternActsVictim, victim):
+    for m in re.finditer(constants.patternActsVictim, victim):
       firstIndex = victim.find(',')
       if firstIndex < 0: firstIndex = 0
       cases_in_victim.append( victim[m.start(0): m.end(0)].replace(",", "") )
