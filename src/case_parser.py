@@ -13,7 +13,6 @@ class CaseParser:
     return self.cases
 
   def __init__(self, plain_html):
-    #self.html_parsed = None
     self.cases = []
     self.acts = []
     self.html_parsed = html.fromstring(plain_html)
@@ -67,5 +66,4 @@ class CaseParser:
       firstIndex = victim.find(',')
       if firstIndex < 0: firstIndex = 0
       cases_in_victim.append( victim[m.start(0): m.end(0)].replace(",", "") )
-      #print( victim[m.start(0): m.end(0)].replace(",", ""))
     return cases_in_victim
