@@ -4,4 +4,4 @@ cssselect==1.1.0
 idna==2.9
 lxml==4.5.0
 requests==2.23.0
-urllib3==1.25.8
+urllib3==1.26.5
